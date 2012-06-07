@@ -1,7 +1,5 @@
 jagsresults <-
-function(param, exact=TRUE, x=out) {
-# print jags results for specified param (or vector of params).
-  # exact = F returns all params that contain the pattern given in param.
+function(x, param, exact=TRUE) {
   if (length(param > 1)) {
 pat <- vector()
     for (i in 1:length(param)) {

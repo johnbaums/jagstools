@@ -8,7 +8,7 @@ Print results for specified rjags parameters.
 Prints results for rjags parameters, which are specified with a regular expression. Pattern matching can be exact or approximate.
 }
 \usage{
-jagsresults(param, exact = TRUE, x = out)
+jagsresults(x, param, exact = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -19,7 +19,7 @@ Character string. The parameters for which results will be printed. This can be 
 Logical. If \code{exact = TRUE}, only parameters whose names match \code{param} exactly will be returned. If \code{exact = FALSE}, any parameters matching the pattern given by \code{param} will be returned. Default: \code{exact = TRUE}.
 }
   \item{x}{
-The name of the rjags object for which results will be printed. Default is \code{x = out}.
+The name of the rjags object for which results will be printed.
 }
 }
 \details{
@@ -71,12 +71,12 @@ M <- function() {
 }
 
 # fit model
-out <- jags(data=list(N=N, temp=temp, rain=rain, wind=wind, y=y), inits=NULL, 
-            parameters.to.save=c('a', 'beta.temp', 'beta.rain', 'beta.wind', 'sd'),  
-            model.file=M, n.iter=10000)
+jagsfit <- jags(data=list(N=N, temp=temp, rain=rain, wind=wind, y=y), 
+                inits=NULL, parameters.to.save=c('a', 'beta.temp', 'beta.rain', 
+                'beta.wind', 'sd'), model.file=M, n.iter=10000)
 
 # output
-out
-jagsresults('beta.rain')
-jagsresults('beta', exact=FALSE)
+jagsfit
+jagsresults(x=jagsfit, param='beta.rain')
+jagsresults(x=jagsfit, param='beta', exact=FALSE)
 }

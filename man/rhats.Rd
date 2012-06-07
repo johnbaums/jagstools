@@ -8,12 +8,12 @@ Sort rjags summary by Rhat.
 Print sorted rhat for all parameters in an rjags object.
 }
 \usage{
-rhats(x = out, asc = TRUE)
+rhats(x, asc = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
-The rjags object containing the results to be printed. Default is \code{x = out}.
+The rjags object containing the results to be printed.
 }
   \item{asc}{
 Logical. If \code{asc = TRUE}, results will be sorted by rhat (ascending). If \code{asc = FALSE}, results will be be returned in the order in which they are stored in the rjags object.  Default is \code{asc = TRUE}.
@@ -68,7 +68,9 @@ M <- function() {
 }
 
 # fit model
-out <- jags(data=list(N=N, temp=temp, rain=rain, wind=wind, y=y), inits=NULL, 
-            parameters.to.save=c('a', 'beta.temp', 'beta.rain', 'beta.wind', 'sd'),  
-            model.file=M, n.iter=10000)
+jagsfit <- jags(data=list(N=N, temp=temp, rain=rain, wind=wind, y=y), 
+                inits=NULL, parameters.to.save=c('a', 'beta.temp', 'beta.rain',
+                'beta.wind', 'sd'), model.file=M, n.iter=10000)
+                
+rhats(x=jagsfit)
 }

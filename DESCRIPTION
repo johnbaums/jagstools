@@ -5,7 +5,7 @@ Version: 1.0
 Date: 2011-08-10
 Author: John Baumgartner
 Maintainer: John Baumgartner <johnbb@student.unimelb.edu.au>
-Depends:
+Depends: R2jags, rjags
 Description: rhats: prints mean, sd and rhat for each parameter, sorted by rhat (by default, but sorting can be disabled); jagsresults: prints parameter estimates etc. for specified parameters using regex pattern matching.
 License: Unlimited
 LazyLoad: yes
