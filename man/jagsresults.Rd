@@ -8,7 +8,7 @@ Print results for specified rjags parameters.
 Prints results for rjags parameters, which are specified with a regular expression. Pattern matching can be exact or approximate.
 }
 \usage{
-jagsresults(x, params, not=FALSE, exact=TRUE, regex=FALSE, ...)
+jagsresults(x, params, invert=FALSE, exact=TRUE, regex=FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -16,16 +16,16 @@ jagsresults(x, params, not=FALSE, exact=TRUE, regex=FALSE, ...)
 The rjags object for which results will be printed.
 }
 \item{param}{
-Character vector. The parameters for which results will be printed (unless \code{not = FALSE}, in which case results for all parameters other than those given in \code{params} will be returned. If \code{exact = FALSE}, then parameters whose names contain any of \code{params} will be returned, where if \code{exact = TRUE} only those parameters that match \code{params} exactly will be returned. If \code{regex = TRUE}, \code{param} should be a character string giving the pattern to be matched.
+Character vector. The parameters for which results will be printed (unless \code{invert = FALSE}, in which case results for all parameters other than those given in \code{params} will be returned. If \code{exact = FALSE}, then parameters whose names contain any of \code{params} will be returned, where if \code{exact = TRUE} only those parameters that match \code{params} exactly will be returned. If \code{regex = TRUE}, \code{param} should be a character string giving the pattern to be matched.
 }
-\item{not}{
-Logical. If \code{not = TRUE}, only those parameters that do not match elements of \code{params} will be returned. Default: \code{not = FALSE}.
+\item{invert}{
+Logical. If \code{invert = TRUE}, only those parameters that do not match elements of \code{params} will be returned. Default: \code{invert = FALSE}.
 }
 \item{exact}{
 Logical. If \code{exact = TRUE}, only parameters whose names match elements of \code{param} exactly will be returned. If \code{exact = FALSE}, parameters that have names containing the strings given by \code{param} will be returned. Ignored if \code{regex = TRUE}. Default: \code{exact = TRUE}.
 }
 \item{regex}{
-Logical. If \code{regex = TRUE}, then \code{param} is expected to be a single string giving a text pattern to be matched. Parameters with names matching the pattern will be returned (unless \code{not = TRUE}, which results in all parameters that do not match the pattern being returned). Default: \code{regex = FALSE}. Text pattern matching uses regular expressions (\code{\link{regex}}).
+Logical. If \code{regex = TRUE}, then \code{param} is expected to be a single string giving a text pattern to be matched. Parameters with names matching the pattern will be returned (unless \code{invert = TRUE}, which results in all parameters that do not match the pattern being returned). Default: \code{regex = FALSE}. Text pattern matching uses regular expressions (\code{\link{regex}}).
 }
 \item{...}{
 Additional arguments that are accepted by grep, e.g. \code{perl = TRUE}, for example to allow look-around pattern matching.
@@ -98,12 +98,12 @@ jagsresults(x=jagsfit, param=c('a', 'sd'))
 jagsresults(x=jagsfit, param='beta', exact=FALSE)
 
 # results for all parameters not including the string 'beta'
-jagsresults(x=jagsfit, param='beta', exact=FALSE, not=TRUE)
+jagsresults(x=jagsfit, param='beta', exact=FALSE, invert=TRUE)
 
 # results for all parameters beginning with 'b' or including 'sd'.
 jagsresults(x=jagsfit, param='^b|sd', regex=TRUE)
 
 # results for all parameters not beginning with 'beta'.
-# note this is equivalent to using param='^beta' with not=TRUE and regex=TRUE
+# note this is equivalent to using param='^beta' with invert=TRUE and regex=TRUE
 jagsresults(x=jagsfit, param='^(?!beta)', regex=TRUE, perl=TRUE)
 }

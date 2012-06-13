@@ -58,7 +58,7 @@ M <- function() {
   for (i in 1:N) {
     y[i] ~ dnorm(y.hat[i], sd^-2)
     y.hat[i] <- a + beta.temp*temp[i] + beta.rain*rain[i] + beta.wind*wind[i]
-    #resid[i] <- y[i] - y.hat[i]
+    resid[i] <- y[i] - y.hat[i]
   }
   sd ~ dunif(0, 100)
   a ~ dnorm(0, 0.0001)
@@ -70,7 +70,7 @@ M <- function() {
 # fit model
 jagsfit <- jags(data=list(N=N, temp=temp, rain=rain, wind=wind, y=y), 
                 inits=NULL, parameters.to.save=c('a', 'beta.temp', 'beta.rain',
-                'beta.wind', 'sd'), model.file=M, n.iter=10000)
+                'beta.wind', 'sd', 'resid'), model.file=M, n.iter=10000)
                 
 rhats(x=jagsfit)
 }
