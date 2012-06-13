@@ -1,15 +1,10 @@
 jagsresults <-
   function(x, params, invert=FALSE, exact=TRUE, regex=FALSE, ...) {
     if (!regex) {
-      rows <- unique(c(sapply(params, function(z) {
-        if (exact) {
-          grep(paste('^', z, '$', sep=''), 
-            gsub('\\[[0-9]+\\]', '', row.names(x$BUGSoutput$summary)), 
-               invert=invert)
-        } else {
-          grep(z, row.names(x$BUGSoutput$summary), invert=invert)
-        }
-      }), recursive=TRUE))
+      params <- paste(params, collapse='|')
+      if (exact) params <- paste('^', gsub('\\|', '\\$\\|\\^', params), '$', sep='')
+      rows <- grep(params, gsub('\\[[0-9]+\\]', '', row.names(x$BUGSoutput$summary)),
+        invert=invert)
     } else {
       rows <- grep(params, gsub('\\[[0-9]+\\]', '', 
         row.names(x$BUGSoutput$summary)), invert=invert, ...)
