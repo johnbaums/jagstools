@@ -8,18 +8,27 @@ Print results for specified rjags parameters.
 Prints results for rjags parameters, which are specified with a regular expression. Pattern matching can be exact or approximate.
 }
 \usage{
-jagsresults(x, param, exact = TRUE)
+jagsresults(x, params, not=FALSE, exact=TRUE, regex=FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{param}{
-Character string. The parameters for which results will be printed. This can be either the exact name of a parameter, in which case only that parameter will be returned, or a text pattern to be matched (in which case exact=FALSE must be specified). Text pattern matching uses regular expressions (\code{\link{regex}}).
+\item{x}{
+The rjags object for which results will be printed.
 }
-  \item{exact}{
-Logical. If \code{exact = TRUE}, only parameters whose names match \code{param} exactly will be returned. If \code{exact = FALSE}, any parameters matching the pattern given by \code{param} will be returned. Default: \code{exact = TRUE}.
+\item{param}{
+Character vector. The parameters for which results will be printed (unless \code{not = FALSE}, in which case results for all parameters other than those given in \code{params} will be returned. If \code{exact = FALSE}, then parameters whose names contain any of \code{params} will be returned, where if \code{exact = TRUE} only those parameters that match \code{params} exactly will be returned. If \code{regex = TRUE}, \code{param} should be a character string giving the pattern to be matched.
 }
-  \item{x}{
-The name of the rjags object for which results will be printed.
+\item{not}{
+Logical. If \code{not = TRUE}, only those parameters that do not match elements of \code{params} will be returned. Default: \code{not = FALSE}.
+}
+\item{exact}{
+Logical. If \code{exact = TRUE}, only parameters whose names match elements of \code{param} exactly will be returned. If \code{exact = FALSE}, parameters that have names containing the strings given by \code{param} will be returned. Ignored if \code{regex = TRUE}. Default: \code{exact = TRUE}.
+}
+\item{regex}{
+Logical. If \code{regex = TRUE}, then \code{param} is expected to be a single string giving a text pattern to be matched. Parameters with names matching the pattern will be returned (unless \code{not = TRUE}, which results in all parameters that do not match the pattern being returned). Default: \code{regex = FALSE}. Text pattern matching uses regular expressions (\code{\link{regex}}).
+}
+\item{...}{
+Additional arguments that are accepted by grep, e.g. \code{perl = TRUE}, for example to allow look-around pattern matching.
 }
 }
 \details{
@@ -44,7 +53,7 @@ John Baumgartner
 \code{\link{rhats}}
 }
 \examples{
-# data
+## Data
 N <- 100
 temp <- runif(N)
 rain <- runif(N)
@@ -56,12 +65,12 @@ beta.wind <- -0.44
 sd <- 0.16
 y <- rnorm(N, a + beta.temp*temp + beta.rain*rain + beta.wind*wind, sd)
 
-# model
+## Model
 M <- function() {
   for (i in 1:N) {
     y[i] ~ dnorm(y.hat[i], sd^-2)
     y.hat[i] <- a + beta.temp*temp[i] + beta.rain*rain[i] + beta.wind*wind[i]
-    #resid[i] <- y[i] - y.hat[i]
+    resid[i] <- y[i] - y.hat[i]
   }
   sd ~ dunif(0, 100)
   a ~ dnorm(0, 0.0001)
@@ -70,13 +79,31 @@ M <- function() {
   beta.wind ~ dnorm(0, 0.0001)
 }
 
-# fit model
+## Fit model
 jagsfit <- jags(data=list(N=N, temp=temp, rain=rain, wind=wind, y=y), 
                 inits=NULL, parameters.to.save=c('a', 'beta.temp', 'beta.rain', 
-                'beta.wind', 'sd'), model.file=M, n.iter=10000)
+                'beta.wind', 'sd', 'resid'), model.file=M, n.iter=10000)
 
-# output
+## Output
+# model summary
 jagsfit
+
+# results for beta.rain only
 jagsresults(x=jagsfit, param='beta.rain')
+
+# results for 'a' and 'sd' only
+jagsresults(x=jagsfit, param=c('a', 'sd'))
+
+# results for all parameters including the string 'beta'
 jagsresults(x=jagsfit, param='beta', exact=FALSE)
+
+# results for all parameters not including the string 'beta'
+jagsresults(x=jagsfit, param='beta', exact=FALSE, not=TRUE)
+
+# results for all parameters beginning with 'b' or including 'sd'.
+jagsresults(x=jagsfit, param='^b|sd', regex=TRUE)
+
+# results for all parameters not beginning with 'beta'.
+# note this is equivalent to using param='^beta' with not=TRUE and regex=TRUE
+jagsresults(x=jagsfit, param='^(?!beta)', regex=TRUE, perl=TRUE)
 }
