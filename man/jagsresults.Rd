@@ -98,7 +98,7 @@ jagsresults(x=jagsfit, param=c('a', 'sd'))
 jagsresults(x=jagsfit, param='beta', exact=FALSE)
 
 # results for all parameters not including the string 'beta'
-jagsresults(x=jagsfit, param='beta', exact=FALSE, not=TRUE)
+jagsresults(x=jagsfit, param='beta', exact=FALSE, invert=TRUE)
 
 # results for all parameters beginning with 'b' or including 'sd'.
 jagsresults(x=jagsfit, param='^b|sd', regex=TRUE)
