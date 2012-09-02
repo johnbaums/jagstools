@@ -14,8 +14,8 @@ Functions for handling rjags object:
 \tabular{ll}{
 Package: \tab jagstools\cr
 Type: \tab Package\cr
-Version: \tab 1.1\cr
-Date: \tab 2011-08-10\cr
+Version: \tab 1.2\cr
+Date: \tab 2012-09-02\cr
 License: \tab Unlimited\cr
 LazyLoad: \tab yes\cr
 }

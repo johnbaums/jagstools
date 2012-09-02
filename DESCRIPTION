@@ -1,7 +1,7 @@
 Package: jagstools
 Type: Package
 Title: Shortcuts for summarising rjags results
-Version: 1.1
+Version: 1.2
 Date: 2011-08-10
 Author: John Baumgartner
 Maintainer: John Baumgartner <johnbb@student.unimelb.edu.au>
