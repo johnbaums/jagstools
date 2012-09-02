@@ -1,5 +1,5 @@
 jagsresults <- function (x, params, invert = FALSE, exact = TRUE, regex = FALSE, 
-               ...) 
+                         ...) 
 {
   if (is(x, 'rjags')) {
     if (!regex) {
