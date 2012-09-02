@@ -1,6 +1,5 @@
 \name{rhats}
 \alias{rhats}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Sort rjags summary by Rhat.
 }
@@ -10,7 +9,6 @@ Print sorted rhat for all parameters in an rjags object.
 \usage{
 rhats(x, asc = TRUE)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
 The rjags object containing the results to be printed.
@@ -20,22 +18,19 @@ Logical. If \code{asc = TRUE}, results will be sorted by rhat (ascending). If \c
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
 }
 \value{
 A matrix with one row per parameter, containing the parameter's Rhat.
 }
 \references{
-%% ~put references to the literature/web site here ~
+
 }
 \author{
 John Baumgartner
 }
 \note{
-%%  ~~further notes~~
-}
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
+}
 
 \seealso{
 \code{\link{jagsresults}}

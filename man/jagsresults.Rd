@@ -1,19 +1,17 @@
 \name{jagsresults}
 \alias{jagsresults}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Print results for specified rjags parameters.
+Print results for specified rjags or mcmc.list parameters.
 }
 \description{
-Prints results for rjags parameters, which are specified with a regular expression. Pattern matching can be exact or approximate.
+Prints results for rjags or mcmc.list parameters, which are specified with a regular expression. Pattern matching can be exact or approximate.
 }
 \usage{
 jagsresults(x, params, invert=FALSE, exact=TRUE, regex=FALSE, ...)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
 \item{x}{
-The rjags object for which results will be printed.
+The rjags or mcmc.list object for which results will be printed.
 }
 \item{param}{
 Character vector. The parameters for which results will be printed (unless \code{invert = FALSE}, in which case results for all parameters other than those given in \code{params} will be returned. If \code{exact = FALSE}, then parameters whose names contain any of \code{params} will be returned, where if \code{exact = TRUE} only those parameters that match \code{params} exactly will be returned. If \code{regex = TRUE}, \code{param} should be a character string giving the pattern to be matched.
@@ -32,22 +30,17 @@ Additional arguments that are accepted by grep, e.g. \code{perl = TRUE}, for exa
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-A matrix with one row for each parameter that matches \code{param}, and one column for each of mean, sd, percentiles 2.5, 25, 50, 75, and 97.5, Rhat, and neff.
+A matrix with one row for each parameter that matches \code{param}, and one column for each of mean, sd, percentiles 2.5, 25, 50, 75, and 97.5. Additionally, columns for Rhat, and neff if x is an rjags object.
 }
 \references{
-%% ~put references to the literature/web site here ~
 }
 \author{
 John Baumgartner
 }
 \note{
-%%  ~~further notes~~
 }
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
 \code{\link{rhats}}
