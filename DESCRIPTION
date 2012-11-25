@@ -1,11 +1,11 @@
 Package: jagstools
 Type: Package
-Title: Shortcuts for summarising rjags results
-Version: 1.2
-Date: 2011-08-10
+Title: Shortcuts for summarising rjags results and recovering parameter structure.
+Version: 1.3
+Date: 2012-11-25
 Author: John Baumgartner
 Maintainer: John Baumgartner <johnbb@student.unimelb.edu.au>
 Depends: R2jags, rjags
-Description: rhats: prints mean, sd and rhat for each parameter, sorted by rhat (by default, but sorting can be disabled); jagsresults: prints parameter estimates etc. for specified parameters using regex pattern matching.
+Description: rhats: prints mean, sd and rhat for each parameter, sorted by rhat (by default, but sorting can be disabled); jagsresults: prints parameter estimates etc. for specified parameters using regex pattern matching; rearray: recovers array structure for results summaries of multidimensional parameters.
 License: Unlimited
 LazyLoad: yes

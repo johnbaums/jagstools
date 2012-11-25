@@ -43,7 +43,7 @@ John Baumgartner
 }
 
 \seealso{
-\code{\link{rhats}}
+\code{\link{rhats} \link{rearray}}
 }
 \examples{
 ## Data
