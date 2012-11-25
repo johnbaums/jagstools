@@ -30,7 +30,6 @@ rearray <- function(x, param='all', fields='all') {
     arrind <- arrayInd(seq_along(a), dim(a))
     invisible(lapply(1:nrow(ind), function(i) {
       a[row.matches(ind[i,], arrind[, -ncol(arrind)])] <<- unlist(x[i,])
-      #a[which(apply(arrind[, -ncol(arrind)], 1, function(y) all(y==ind[i,])))] <<- unlist(x[i,]) # slow
     }))   
     dimnames(a)[[length(dim(a))]] <- colnames(x)
     return(a)
