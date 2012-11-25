@@ -40,6 +40,7 @@
   data(simgrowth)
   a <- rearray(simgrowth)
   str(a)
-  a2 <- rearray(simgrowth, param='e.site.year', fields=c('mean', '50\%', 'n.eff'))
+  a2 <- rearray(simgrowth, param='lambda', fields=c('mean', '50\%', 'n.eff'))
+  a2 <- rearray(simgrowth, param='lambda', fields=c(1, 2, 9)) # equivalent to above
   str(a2)
 }
