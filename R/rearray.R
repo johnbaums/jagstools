@@ -31,7 +31,7 @@ rearray <- function(x, param='all', fields='all') {
     invisible(lapply(1:nrow(ind), function(i) {
       a[row.matches(ind[i,], arrind[, -ncol(arrind)])] <<- unlist(x[i,])
     }))   
-    dimnames(a)[[length(dim(a))]] <- colnames(x)
-    return(a)
+    dimnames(a)[[length(dim(a))]] <- as.list(colnames(x))
+    return(drop(a))
   })
 }
