@@ -15,6 +15,21 @@ jagsresults <- function (x, params, invert = FALSE, exact = TRUE, regex = FALSE,
                    invert = invert, ...)
     }
     return(x$BUGSoutput$summary[rows, , drop = FALSE])
+  } else if (is(x, "stanfit")) {
+    x <- summary(x)
+    if (!regex) {
+      params <- paste(params, collapse = "|")
+      if (exact) 
+        params <- paste("^", gsub("\\|", "\\$\\|\\^", 
+                                  params), "$", sep = "")
+      rows <- grep(params, gsub("\\[[0-9]+\\]", "", row.names(x$summary)), 
+                   invert = invert)
+    }
+    else {
+      rows <- grep(params, gsub("\\[[0-9]+\\]", "", row.names(x$summary)), 
+                   invert = invert, ...)
+    }
+    return(x$summary[rows, , drop = FALSE])
   } else if (is(x, 'mcmc.list')) {
     
     if (!regex) {
@@ -34,5 +49,5 @@ jagsresults <- function (x, params, invert = FALSE, exact = TRUE, regex = FALSE,
     }))
     return(SUMM[rows, , drop = FALSE])
     
-  } else stop('x must be either an "rjags" object or an "mcmc.list" object.')
+  } else stop('x must be either an "rjags", "mcmc.list" or "stanfit" object.')
 }
