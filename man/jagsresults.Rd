@@ -40,10 +40,6 @@ A matrix with one row for each parameter that matches \code{param}, and one colu
 John Baumgartner <johnbaums@gmail.com>
 James Camac <james.camac@gmail.com>
 }
-\maintainer{
-John Baumgartner <johnbaums@gmail.com>
-James Camac <james.camac@gmail.com>
-}
 \note{
 }
 \seealso{
