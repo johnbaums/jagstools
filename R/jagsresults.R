@@ -7,11 +7,11 @@ jagsresults <- function (x, params, invert = FALSE, exact = TRUE, regex = FALSE,
       if (exact) 
         params <- paste("^", gsub("\\|", "\\$\\|\\^", params), 
                         "$", sep = "")
-      rows <- grep(params, gsub("\\[[0-9]+\\]", "", row.names(x$BUGSoutput$summary)), 
+      rows <- grep(params, gsub("\\[[0-9,]+\\]", "", row.names(x$BUGSoutput$summary)), 
                    invert = invert)
     }
     else {
-      rows <- grep(params, gsub("\\[[0-9]+\\]", "", row.names(x$BUGSoutput$summary)), 
+      rows <- grep(params, gsub("\\[[0-9,]+\\]", "", row.names(x$BUGSoutput$summary)), 
                    invert = invert, ...)
     }
     return(x$BUGSoutput$summary[rows, , drop = FALSE])
@@ -22,11 +22,11 @@ jagsresults <- function (x, params, invert = FALSE, exact = TRUE, regex = FALSE,
       if (exact) 
         params <- paste("^", gsub("\\|", "\\$\\|\\^", 
                                   params), "$", sep = "")
-      rows <- grep(params, gsub("\\[[0-9]+\\]", "", row.names(x$summary)), 
+      rows <- grep(params, gsub("\\[[0-9,]+\\]", "", row.names(x$summary)), 
                    invert = invert)
     }
     else {
-      rows <- grep(params, gsub("\\[[0-9]+\\]", "", row.names(x$summary)), 
+      rows <- grep(params, gsub("\\[[0-9,]+\\]", "", row.names(x$summary)), 
                    invert = invert, ...)
     }
     return(x$summary[rows, , drop = FALSE])
@@ -37,11 +37,11 @@ jagsresults <- function (x, params, invert = FALSE, exact = TRUE, regex = FALSE,
       if (exact) 
         params <- paste("^", gsub("\\|", "\\$\\|\\^", params), 
                         "$", sep = "")
-      rows <- grep(params, gsub("\\[[0-9]+\\]", "", colnames(x[[1]])), 
+      rows <- grep(params, gsub("\\[[0-9,]+\\]", "", colnames(x[[1]])), 
                    invert = invert)
     }
     else {
-      rows <- grep(params, gsub("\\[[0-9]+\\]", "", colnames(x[[1]])), 
+      rows <- grep(params, gsub("\\[[0-9,]+\\]", "", colnames(x[[1]])), 
                    invert = invert, ...)
     }
     SUMM <- t(apply(do.call(rbind, x), 2, function(z) {
