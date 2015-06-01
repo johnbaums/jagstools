@@ -1,14 +1,20 @@
 Package: jagstools
 Type: Package
-Title: Shortcuts for summarising rjags, mcmc.list and stanfit results, and recovering parameter structure.
-Version: 1.4
-Date: 2015-03-11
-Author: John Baumgartner & James Camac
-Maintainer: John Baumgartner <johnbaums@gmail.com>
+Title: Easy access to rjags and mcmc.list parameters
+Version: 1.4.1
+Authors@R: as.person(c(
+    "John Baumgartner <johnbaums@gmail.com> [aut, cre]", 
+    "James Camac <james.camac@gmail.com> [ctb]"
+  ))
 Suggests: 
   R2jags,
-  rjags, 
-  rstan
-Description: Summarise/filter mcmc results (rjags, mcmc.list, stanfit).
-License: Unlimited
-LazyLoad: yes
+  rjags
+Depends: R (>= 3.1.0)
+Description: The jagstools package provides functions that simplify access to 
+    summaries of model parameter samples stored in rjags and mcmc.list objects. 
+    The rhats function prints mean, sd and rhat for each parameter of an rjags
+    object, with optional sorting. The jagsresults function prints parameter 
+    estimates for specified parameters, using regex pattern matching. The 
+    rearray function recovers array structure for multidimensional parameters.
+License: GPL-3
+LazyData: true

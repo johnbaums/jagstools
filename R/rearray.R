@@ -1,8 +1,36 @@
-# x = the jags object
-# param = the exact name of the parameter to be converted back to an array 
-# (can be a vector of param names, in which case a list of arrays will be returned,
-# can also be 'all', in which case all parameters with dimensions will be returned)
-# fields = the names of jags summary columns to include as array slices (last index)
+#' Recover array structure for multidimensional nodes
+#' 
+#' Converts summaries of multidimensional nodes of \code{rjags} or 
+#' \code{mcmc.list} objects to a list of arrays.
+#' 
+#' @param x The \code{rjags} or \code{mcmc.list} object for which array 
+#'   structure will be recovered.
+#' @param param Character vector. The multidimensional parameters that will be 
+#'   given an array structure. Default is \code{'all'}, which returns arrays for
+#'   all multidimensional parameters in \code{x}.
+#' @param fields A vector (character or integer) that indicates the summary 
+#'   fields that should be included as array slices. Valid fields are: 'mean', 
+#'   'sd', '2.5\%', '25\%', '50\%', '75\%', '97.5\%', 'Rhat', and 'n.eff'. If 
+#'   supplied as an integer vector, numbers should indicate the column numbers 
+#'   (i.e. positions in the series given above). Note that 'Rhat' and 'n.eff' 
+#'   are only available if \code{x} is an \code{rjags} object. Default is 
+#'   \code{'all'}, which returns all available fields as array slices.
+#' @return A list of arrays (one per multidimensional model parameter specified
+#'   in \code{param}) containing node summaries for the requested \code{fields}.
+#'   Fields (e.g. mean, sd, Rhat, etc.) will be included as the last
+#'   (right-most) dimension.
+#' @author John Baumgartner, \email{johnbaums@@gmail.com}
+#' @seealso \code{\link{jagsresults}}
+#' @export
+#' @examples
+#' data(simgrowth)
+#' a <- rearray(simgrowth)
+#' str(a)
+#' a2 <- rearray(simgrowth, param='lambda', fields=c('mean', '50\%', 'n.eff'))
+#' str(a2)
+#' # or...
+#' a2 <- rearray(simgrowth, param='lambda', fields=c(1, 2, 9))
+#' str(a2)
 rearray <- function(x, param='all', fields='all') {
   if(identical(param, 'all')) param <- '.*'
   results <- jagsresults(x, paste(paste(param, '\\[[0-9]+(,[0-9]+)+\\]', sep=''), 
