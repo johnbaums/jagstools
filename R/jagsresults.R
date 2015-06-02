@@ -4,14 +4,14 @@
 #' specified with a regular expression. Pattern matching can be exact or 
 #' approximate.
 #' 
-#' @param x The \code{rjags} or \code{mcmc.list} object for which results will
+#' @param x The \code{rjags} or \code{mcmc.list} object for which results will 
 #'   be printed.
 #' @param params Character vector. The parameters for which results will be 
 #'   printed (unless \code{invert} is \code{FALSE}, in which case results for 
-#'   all parameters other than those given in \code{params} will be returned). If
-#'   \code{exact} is \code{FALSE}, then parameters whose names contain any of 
-#'   \code{params} will be returned. If \code{exact} is \code{TRUE} only 
-#'   those parameters that match \code{params} exactly will be returned. If 
+#'   all parameters other than those given in \code{params} will be returned).
+#'   If \code{exact} is \code{FALSE}, then parameters whose names contain any of
+#'   \code{params} will be returned. If \code{exact} is \code{TRUE} only those
+#'   parameters that match \code{params} exactly will be returned. If 
 #'   \code{regex} is \code{TRUE}, \code{param} should be a character string 
 #'   giving the pattern to be matched.
 #' @param invert Logical. If \code{invert} is \code{TRUE}, only those parameters
@@ -27,6 +27,8 @@
 #'   \code{invert} is \code{TRUE}, which results in all parameters that do not 
 #'   match the pattern being returned). Text pattern matching uses regular 
 #'   expressions (\code{\link{regex}}).
+#' @param probs A numeric vector of probabilities within range [0, 1],
+#'   representing the sample quantiles to be calculated and returned.
 #' @param ... Additional arguments accepted by grep, e.g. \code{perl} is 
 #'   \code{TRUE}, for example to allow look-around pattern matching.
 #' @return A matrix with one row for each parameter that matches \code{param}, 
@@ -85,7 +87,9 @@
 #' jagsresults(x=jagsfit, param='beta.rain')
 #' 
 #' # results for 'a' and 'sd' only
-#' jagsresults(x=jagsfit, param=c('a', 'sd'))
+# jagsresults(x=jagsfit, param=c('a', 'sd'))
+# jagsresults(x=jagsfit, param=c('a', 'sd'), 
+#             probs=c(0.01, 0.025, 0.1, 0.25, 0.5, 0.75, 0.9, 0.975))
 #' 
 #' # results for all parameters including the string 'beta'
 #' jagsresults(x=jagsfit, param='beta', exact=FALSE)
@@ -99,39 +103,49 @@
 #' # results for all parameters not beginning with 'beta'.
 #' # note this is equivalent to using param='^beta' with invert=TRUE and regex=TRUE
 #' jagsresults(x=jagsfit, param='^(?!beta)', regex=TRUE, perl=TRUE)
-jagsresults <- function (x, params, invert = FALSE, exact = TRUE, regex = FALSE, 
-                         ...) 
-{
-  if (is(x, 'rjags')) {
-    if (!regex) {
-      params <- paste(params, collapse = "|")
-      if (exact) 
-        params <- paste("^", gsub("\\|", "\\$\\|\\^", params), 
-                        "$", sep = "")
-      rows <- grep(params, gsub("\\[[0-9,]+\\]", "", row.names(x$BUGSoutput$summary)), 
-                   invert = invert)
-    }
-    else {
-      rows <- grep(params, row.names(x$BUGSoutput$summary), invert = invert, ...)
-    }
-    return(x$BUGSoutput$summary[rows, , drop = FALSE])
-  } else if (is(x, 'mcmc.list')) {
-    
-    if (!regex) {
-      params <- paste(params, collapse = "|")
-      if (exact) 
-        params <- paste("^", gsub("\\|", "\\$\\|\\^", params), 
-                        "$", sep = "")
-      rows <- grep(params, gsub("\\[[0-9,]+\\]", "", colnames(x[[1]])), 
-                   invert = invert)
-    }
-    else {
-      rows <- grep(params, colnames(x[[1]]), invert = invert, ...)
-    }
-    SUMM <- t(apply(do.call(rbind, x), 2, function(z) {
-      c(mean=mean(z), sd=sd(z), quantile(z, c(0.025, 0.25, 0.5, 0.75, 0.975)))
-    }))
-    return(SUMM[rows, , drop = FALSE])
-    
-  } else stop('x must be either an "rjags" or "mcmc.list"')
+#' 
+#' ## mcmc.list example
+#' library(rjags)
+#' simgrowth$model$recompile()
+#' simgrowth_mcmclist <- 
+#'   coda.samples(simgrowth$model, 
+#'                setdiff(simgrowth$parameters.to.save, 'deviance'), 1000)
+#' is(simgrowth_mcmclist)
+#' jagsresults(simgrowth_mcmclist, c('b[3]', 'log.r[2,1]'))
+#' jagsresults(simgrowth_mcmclist, c('lambda[3,1]', 'sd.'), exact=FALSE)
+#' jagsresults(simgrowth_mcmclist, c('lambda\\[3,1\\]|sd\\.'), regex=TRUE)
+jagsresults <- function(x, params, invert = FALSE, exact = TRUE, regex = FALSE, 
+                        probs=c(0.025, 0.25, 0.5, 0.75, 0.975), ...) {
+  if(!regex) {
+    params <- paste0(gsub('(?=\\.|\\[|\\])', '\\1\\\\', params, perl=TRUE),
+                     '(\\[.*\\])?', collapse='|')
+    if (exact) params <- paste("^", 
+                               gsub("\\|", "$|^", params), 
+                               "$", sep = "")
+  } else {
+    if(exact) warning('exact=TRUE ignored when regex=TRUE')
+  }
+  switch(is(x)[1], 
+         rjags={
+           nm <- dimnames(x$BUGSoutput$sims.array)[[3]]
+           i <- grep(params, nm, invert=invert, ...)
+           if(length(i) == 0) stop('No parameters match params', call.=FALSE)
+           samp <- x$BUGSoutput$sims.array[, , i, drop=FALSE] 
+           rhat_neff <- x$BUGSoutput$summary[i, c('Rhat', 'n.eff'), drop=FALSE]
+           return(cbind(t(apply(
+             samp, 3, function(x) 
+               c(mean=mean(x), sd=sd(x), quantile(x, probs=probs)))), rhat_neff))
+         },
+         mcmc.list={
+           nm <- colnames(x[[1]])
+           i <- grep(params, nm, invert=invert, ...)
+           if(length(i) == 0) stop('No parameters match params', call.=FALSE)
+           t(apply(do.call(rbind, x), 2, function(z) {
+             c(mean=mean(z), sd=sd(z), quantile(z, probs))
+           }))[i, , drop=FALSE]
+         },
+         {
+           stop('x must be an mcmc.list or rjags  object.')
+         }
+  )
 }

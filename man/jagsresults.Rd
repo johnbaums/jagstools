@@ -4,7 +4,8 @@
 \alias{jagsresults}
 \title{Print results for specified rjags or mcmc.list parameters}
 \usage{
-jagsresults(x, params, invert = FALSE, exact = TRUE, regex = FALSE, ...)
+jagsresults(x, params, invert = FALSE, exact = TRUE, regex = FALSE,
+  probs = c(0.025, 0.25, 0.5, 0.75, 0.975), ...)
 }
 \arguments{
 \item{x}{The \code{rjags} or \code{mcmc.list} object for which results will
@@ -12,10 +13,10 @@ be printed.}
 
 \item{params}{Character vector. The parameters for which results will be
 printed (unless \code{invert} is \code{FALSE}, in which case results for
-all parameters other than those given in \code{params} will be returned). If
-\code{exact} is \code{FALSE}, then parameters whose names contain any of
-\code{params} will be returned. If \code{exact} is \code{TRUE} only
-those parameters that match \code{params} exactly will be returned. If
+all parameters other than those given in \code{params} will be returned).
+If \code{exact} is \code{FALSE}, then parameters whose names contain any of
+\code{params} will be returned. If \code{exact} is \code{TRUE} only those
+parameters that match \code{params} exactly will be returned. If
 \code{regex} is \code{TRUE}, \code{param} should be a character string
 giving the pattern to be matched.}
 
@@ -34,6 +35,9 @@ Parameters with names matching the pattern will be returned (unless
 \code{invert} is \code{TRUE}, which results in all parameters that do not
 match the pattern being returned). Text pattern matching uses regular
 expressions (\code{\link{regex}}).}
+
+\item{probs}{A numeric vector of probabilities within range [0, 1],
+representing the sample quantiles to be calculated and returned.}
 
 \item{...}{Additional arguments accepted by grep, e.g. \code{perl} is
 \code{TRUE}, for example to allow look-around pattern matching.}
@@ -95,7 +99,6 @@ jagsfit
 jagsresults(x=jagsfit, param='beta.rain')
 
 # results for 'a' and 'sd' only
-jagsresults(x=jagsfit, param=c('a', 'sd'))
 
 # results for all parameters including the string 'beta'
 jagsresults(x=jagsfit, param='beta', exact=FALSE)
@@ -109,6 +112,17 @@ jagsresults(x=jagsfit, param='^b|sd', regex=TRUE)
 # results for all parameters not beginning with 'beta'.
 # note this is equivalent to using param='^beta' with invert=TRUE and regex=TRUE
 jagsresults(x=jagsfit, param='^(?!beta)', regex=TRUE, perl=TRUE)
+
+## mcmc.list example
+library(rjags)
+simgrowth$model$recompile()
+simgrowth_mcmclist <-
+  coda.samples(simgrowth$model,
+               setdiff(simgrowth$parameters.to.save, 'deviance'), 1000)
+is(simgrowth_mcmclist)
+jagsresults(simgrowth_mcmclist, c('b[3]', 'log.r[2,1]'))
+jagsresults(simgrowth_mcmclist, c('lambda[3,1]', 'sd.'), exact=FALSE)
+jagsresults(simgrowth_mcmclist, c('lambda\\\\[3,1\\\\]|sd\\\\.'), regex=TRUE)
 }
 \author{
 John Baumgartner, \email{johnbaums@gmail.com}
