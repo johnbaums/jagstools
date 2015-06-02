@@ -34,7 +34,7 @@
 rearray <- function(x, param='all', fields='all') {
   if(identical(param, 'all')) param <- '.*'
   results <- jagsresults(x, paste(paste(param, '\\[[0-9]+(,[0-9]+)+\\]', sep=''), 
-                                  collapse='|'), regex=TRUE)
+                                  collapse='|'), regex=TRUE, exact=FALSE)
   if(!length(results)) stop(sprintf('No arrays found in object %s', deparse(substitute(x))))
   if(identical(fields, 'all')) fields <- colnames(results)
   if(!(all(fields %in% colnames(results))) & !(all(fields %in% seq_len(ncol(results))))) {
