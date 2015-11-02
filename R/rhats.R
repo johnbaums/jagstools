@@ -2,7 +2,8 @@
 #' 
 #' Print sorted rhat for all parameters in an \code{rjags} object
 #' 
-#' @param x The \code{rjags} object containing the results to be printed.
+#' @param x The \code{rjags} or \code{rjags.parallel} object containing the
+#'   results to be printed.
 #' @param asc Logical. If \code{asc} is \code{TRUE}, results will be sorted by 
 #'   rhat (ascending). If \code{asc} \code{FALSE}, results will be be returned in
 #'   the order in which they are stored in the \code{rjags} object.

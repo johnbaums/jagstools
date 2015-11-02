@@ -1,7 +1,7 @@
 Package: jagstools
 Type: Package
 Title: Easy access to rjags and mcmc.list parameters
-Version: 1.5.0
+Version: 1.5.1.9000
 Authors@R: as.person(c(
     "John Baumgartner <johnbaums@gmail.com> [aut, cre]", 
     "James Camac <james.camac@gmail.com> [ctb]"

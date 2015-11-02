@@ -3,8 +3,8 @@
 #' Converts summaries of multidimensional nodes of \code{rjags} or 
 #' \code{mcmc.list} objects to a list of arrays.
 #' 
-#' @param x The \code{rjags} or \code{mcmc.list} object for which array 
-#'   structure will be recovered.
+#' @param x The \code{rjags}, \code{rjags.parallel}, or \code{mcmc.list} object
+#'   for which array structure will be recovered.
 #' @param param Character vector. The multidimensional parameters that will be 
 #'   given an array structure. Default is \code{'all'}, which returns arrays for
 #'   all multidimensional parameters in \code{x}.
@@ -35,10 +35,12 @@ rearray <- function(x, param='all', fields='all') {
   if(identical(param, 'all')) param <- '.*'
   results <- jagsresults(x, paste(paste(param, '\\[[0-9]+(,[0-9]+)+\\]', sep=''), 
                                   collapse='|'), regex=TRUE, exact=FALSE)
-  if(!length(results)) stop(sprintf('No arrays found in object %s', deparse(substitute(x))))
+  if(!length(results)) stop(sprintf('No arrays found in object %s', 
+                                    deparse(substitute(x))))
   if(identical(fields, 'all')) fields <- colnames(results)
   if(!(all(fields %in% colnames(results))) & !(all(fields %in% seq_len(ncol(results))))) {
-    stop(sprintf("fields must be either 'all', or a character vector of jags summary column names, which may include: %s", 
+    stop(sprintf("fields must be either 'all', or a character vector of jags ',
+                 'summary column names, which may include: %s", 
                  toString(colnames(results))))
   }
   results <- results[, fields, drop=FALSE]

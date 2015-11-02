@@ -4,8 +4,8 @@
 #' specified with a regular expression. Pattern matching can be exact or 
 #' approximate.
 #' 
-#' @param x The \code{rjags} or \code{mcmc.list} object for which results will 
-#'   be printed.
+#' @param x The \code{rjags}, \code{rjags.parallel}, or \code{mcmc.list} object
+#'   for which results will be printed.
 #' @param params Character vector. The parameters for which results will be 
 #'   printed (unless \code{invert} is \code{FALSE}, in which case results for 
 #'   all parameters other than those given in \code{params} will be returned).
@@ -87,9 +87,9 @@
 #' jagsresults(x=jagsfit, param='beta.rain')
 #' 
 #' # results for 'a' and 'sd' only
-# jagsresults(x=jagsfit, param=c('a', 'sd'))
-# jagsresults(x=jagsfit, param=c('a', 'sd'), 
-#             probs=c(0.01, 0.025, 0.1, 0.25, 0.5, 0.75, 0.9, 0.975))
+#' jagsresults(x=jagsfit, param=c('a', 'sd'))
+#' jagsresults(x=jagsfit, param=c('a', 'sd'), 
+#'             probs=c(0.01, 0.025, 0.1, 0.25, 0.5, 0.75, 0.9, 0.975))
 #' 
 #' # results for all parameters including the string 'beta'
 #' jagsresults(x=jagsfit, param='beta', exact=FALSE)
@@ -125,27 +125,23 @@ jagsresults <- function(x, params, invert = FALSE, exact = TRUE, regex = FALSE,
   } else {
     if(exact) warning('exact=TRUE ignored when regex=TRUE')
   }
-  switch(is(x)[1], 
-         rjags={
-           nm <- dimnames(x$BUGSoutput$sims.array)[[3]]
-           i <- grep(params, nm, invert=invert, ...)
-           if(length(i) == 0) stop('No parameters match params', call.=FALSE)
-           samp <- x$BUGSoutput$sims.array[, , i, drop=FALSE] 
-           rhat_neff <- x$BUGSoutput$summary[i, c('Rhat', 'n.eff'), drop=FALSE]
-           return(cbind(t(apply(
-             samp, 3, function(x) 
-               c(mean=mean(x), sd=sd(x), quantile(x, probs=probs)))), rhat_neff))
-         },
-         mcmc.list={
-           nm <- colnames(x[[1]])
-           i <- grep(params, nm, invert=invert, ...)
-           if(length(i) == 0) stop('No parameters match params', call.=FALSE)
-           t(apply(do.call(rbind, x), 2, function(z) {
-             c(mean=mean(z), sd=sd(z), quantile(z, probs))
-           }))[i, , drop=FALSE]
-         },
-         {
-           stop('x must be an mcmc.list or rjags  object.')
-         }
-  )
+  if(any(is(x) %in% c('rjags.parallel', 'rjags'))) {
+    nm <- dimnames(x$BUGSoutput$sims.array)[[3]]
+    i <- grep(params, nm, invert=invert, ...)
+    if(length(i) == 0) stop('No parameters match params', call.=FALSE)
+    samp <- x$BUGSoutput$sims.array[, , i, drop=FALSE] 
+    rhat_neff <- x$BUGSoutput$summary[i, c('Rhat', 'n.eff'), drop=FALSE]
+    return(cbind(t(apply(
+      samp, 3, function(x) 
+        c(mean=mean(x), sd=sd(x), quantile(x, probs=probs)))), rhat_neff))
+  } else if(any(is(x)=='mcmc.list')) {
+    nm <- colnames(x[[1]])
+    i <- grep(params, nm, invert=invert, ...)
+    if(length(i) == 0) stop('No parameters match params', call.=FALSE)
+    t(apply(do.call(rbind, x), 2, function(z) {
+      c(mean=mean(z), sd=sd(z), quantile(z, probs))
+    }))[i, , drop=FALSE]
+  } else {
+    stop('x must be an mcmc.list or rjags  object.')
+  }
 }
