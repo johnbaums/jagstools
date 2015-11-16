@@ -44,10 +44,10 @@
 #' str(a2)
 rearray <- function(x, param='all', fields='all', regex = TRUE, exact=FALSE) {
   if(identical(param, 'all')) param <- '.*'
-  results <- jagsresults(x, paste(paste(param, '\\[[0-9]+(,[0-9]+)+\\]', sep=''), 
-                                  collapse='|'), regex=regex, exact=exact)
-  if(!length(results)) stop(sprintf('No arrays found in object %s', 
-                                    deparse(substitute(x))))
+  results <- jagsresults(x, param, regex=regex, exact=exact)
+  if(!any(sapply(x$BUGSoutput$sims.list, function(x) length(dim(x)) > 2))) {
+    stop(sprintf('No arrays found in object %s', deparse(substitute(x))))
+  }
   if(identical(fields, 'all')) fields <- colnames(results)
   if(!(all(fields %in% colnames(results))) & !(all(fields %in% seq_len(ncol(results))))) {
     stop(sprintf("fields must be either 'all', or a character vector of jags ',
