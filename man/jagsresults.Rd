@@ -8,8 +8,8 @@ jagsresults(x, params, invert = FALSE, exact = TRUE, regex = FALSE,
   probs = c(0.025, 0.25, 0.5, 0.75, 0.975), ...)
 }
 \arguments{
-\item{x}{The \code{rjags} or \code{mcmc.list} object for which results will
-be printed.}
+\item{x}{The \code{rjags}, \code{rjags.parallel}, or \code{mcmc.list} object
+for which results will be printed.}
 
 \item{params}{Character vector. The parameters for which results will be
 printed (unless \code{invert} is \code{FALSE}, in which case results for
@@ -99,6 +99,9 @@ jagsfit
 jagsresults(x=jagsfit, param='beta.rain')
 
 # results for 'a' and 'sd' only
+jagsresults(x=jagsfit, param=c('a', 'sd'))
+jagsresults(x=jagsfit, param=c('a', 'sd'),
+            probs=c(0.01, 0.025, 0.1, 0.25, 0.5, 0.75, 0.9, 0.975))
 
 # results for all parameters including the string 'beta'
 jagsresults(x=jagsfit, param='beta', exact=FALSE)

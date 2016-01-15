@@ -7,8 +7,8 @@
 rearray(x, param = "all", fields = "all")
 }
 \arguments{
-\item{x}{The \code{rjags} or \code{mcmc.list} object for which array
-structure will be recovered.}
+\item{x}{The \code{rjags}, \code{rjags.parallel}, or \code{mcmc.list} object
+for which array structure will be recovered.}
 
 \item{param}{Character vector. The multidimensional parameters that will be
 given an array structure. Default is \code{'all'}, which returns arrays for

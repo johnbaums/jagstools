@@ -7,7 +7,8 @@
 rhats(x, asc = TRUE)
 }
 \arguments{
-\item{x}{The \code{rjags} object containing the results to be printed.}
+\item{x}{The \code{rjags} or \code{rjags.parallel} object containing the
+results to be printed.}
 
 \item{asc}{Logical. If \code{asc} is \code{TRUE}, results will be sorted by
 rhat (ascending). If \code{asc} \code{FALSE}, results will be be returned in
