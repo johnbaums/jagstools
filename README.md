@@ -1,4 +1,5 @@
 jagstools
-=========
+[![Travis-CI Build Status](https://travis-ci.org/johnbaums/jagstools.svg?branch=master)](https://travis-ci.org/johnbaums/jagstools)
 
-R functions for filtering and conversion of rjags and mcmc.list object summaries.
+`jagstools` simplifies extraction of data from `rjags` and `mcmc.list` object
+summaries. 
