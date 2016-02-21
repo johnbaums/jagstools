@@ -12,8 +12,5 @@ simgrowth
 An example \code{rjags} object including output for a hypothetical population
 growth model fit to simulated data.
 }
-\author{
-John Baumgartner, \email{johnbaums@gmail.com}
-}
 \keyword{datasets}
 

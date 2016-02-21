@@ -25,9 +25,6 @@ Print sorted rhat for all parameters in an \code{rjags} object
 data(simgrowth)
 rhats(simgrowth)
 }
-\author{
-John Baumgartner, \email{johnbaums@gmail.com}
-}
 \seealso{
 \code{\link{jagsresults}}
 }

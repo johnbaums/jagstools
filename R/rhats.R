@@ -9,7 +9,6 @@
 #'   the order in which they are stored in the \code{rjags} object.
 #' @return A matrix with one row per parameter, containing parameters' Rhat
 #'   values.
-#' @author John Baumgartner, \email{johnbaums@@gmail.com}
 #' @seealso \code{\link{jagsresults}}
 #' @export
 #' @examples
