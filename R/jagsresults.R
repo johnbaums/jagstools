@@ -119,9 +119,7 @@ jagsresults <- function(x, params, invert = FALSE, exact = TRUE, regex = FALSE,
   if(!regex) {
     params <- paste0(gsub('(?=\\.|\\[|\\])', '\\1\\\\', params, perl=TRUE),
                      '(\\[.*\\])?', collapse='|')
-    if (exact) params <- paste("^", 
-                               gsub("\\|", "$|^", params), 
-                               "$", sep = "")
+    if (exact) params <- paste("^", gsub("\\|", "$|^", params), sep = "")
   } else {
     if(exact) warning('exact=TRUE ignored when regex=TRUE')
   }

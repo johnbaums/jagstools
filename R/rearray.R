@@ -15,6 +15,17 @@
 #'   (i.e. positions in the series given above). Note that 'Rhat' and 'n.eff' 
 #'   are only available if \code{x} is an \code{rjags} object. Default is 
 #'   \code{'all'}, which returns all available fields as array slices.
+#' @param exact Logical. If \code{exact} is \code{TRUE}, only parameters whose 
+#'   names match elements of \code{param} exactly will be returned. If 
+#'   \code{exact = FALSE}, parameters that have names containing the strings 
+#'   given by \code{param} will be returned. Ignored if \code{regex} is 
+#'   \code{TRUE}.
+#' @param regex Logical. If \code{regex} is \code{TRUE}, then \code{param} is 
+#'   expected to be a single string giving a text pattern to be matched. 
+#'   Parameters with names matching the pattern will be returned (unless 
+#'   \code{invert} is \code{TRUE}, which results in all parameters that do not 
+#'   match the pattern being returned). Text pattern matching uses regular 
+#'   expressions (\code{\link{regex}}).
 #' @return A list of arrays (one per multidimensional model parameter specified
 #'   in \code{param}) containing node summaries for the requested \code{fields}.
 #'   Fields (e.g. mean, sd, Rhat, etc.) will be included as the last
@@ -31,12 +42,12 @@
 #' # or...
 #' a2 <- rearray(simgrowth, param='lambda', fields=c(1, 2, 9))
 #' str(a2)
-rearray <- function(x, param='all', fields='all') {
+rearray <- function(x, param='all', fields='all', regex = TRUE, exact=FALSE) {
   if(identical(param, 'all')) param <- '.*'
-  results <- jagsresults(x, paste(paste(param, '\\[[0-9]+(,[0-9]+)+\\]', sep=''), 
-                                  collapse='|'), regex=TRUE, exact=FALSE)
-  if(!length(results)) stop(sprintf('No arrays found in object %s', 
-                                    deparse(substitute(x))))
+  results <- jagsresults(x, param, regex=regex, exact=exact)
+  if(!any(sapply(x$BUGSoutput$sims.list, function(x) length(dim(x)) > 2))) {
+    stop(sprintf('No arrays found in object %s', deparse(substitute(x))))
+  }
   if(identical(fields, 'all')) fields <- colnames(results)
   if(!(all(fields %in% colnames(results))) & !(all(fields %in% seq_len(ncol(results))))) {
     stop(sprintf("fields must be either 'all', or a character vector of jags ',
