@@ -1,20 +1,22 @@
 Package: jagstools
 Type: Package
 Title: Easy access to rjags and mcmc.list parameters
-Version: 1.5.1.9001
+Version: 1.5.2.9000
+Description: The jagstools package provides functions that simplify access to
+    summaries of model parameter samples stored in rjags and mcmc.list objects.
+    The rhats function prints mean, sd and rhat for each parameter of an rjags
+    object, with optional sorting. The jagsresults function prints parameter
+    estimates for specified parameters, using regex pattern matching. The
+    rearray function recovers array structure for multidimensional parameters.
 Authors@R: as.person(c(
     "John Baumgartner <johnbaums@gmail.com> [aut, cre]", 
     "James Camac <james.camac@gmail.com> [ctb]"
   ))
-Suggests: 
-  R2jags,
-  rjags
-Depends: R (>= 3.1.0)
-Description: The jagstools package provides functions that simplify access to 
-    summaries of model parameter samples stored in rjags and mcmc.list objects. 
-    The rhats function prints mean, sd and rhat for each parameter of an rjags
-    object, with optional sorting. The jagsresults function prints parameter 
-    estimates for specified parameters, using regex pattern matching. The 
-    rearray function recovers array structure for multidimensional parameters.
+Depends:
+    R (>= 3.1.0)
+Suggests:
+    R2jags,
+    rjags
 License: GPL-3
 LazyData: true
+RoxygenNote: 5.0.1

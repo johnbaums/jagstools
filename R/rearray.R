@@ -26,7 +26,7 @@
 #' data(simgrowth)
 #' a <- rearray(simgrowth)
 #' str(a)
-#' a2 <- rearray(simgrowth, param='lambda', fields=c('mean', '50\%', 'n.eff'))
+#' a2 <- rearray(simgrowth, param='lambda', fields=c('mean', '50%', 'n.eff'))
 #' str(a2)
 #' # or...
 #' a2 <- rearray(simgrowth, param='lambda', fields=c(1, 2, 9))
