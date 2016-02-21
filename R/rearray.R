@@ -41,7 +41,10 @@
 #' a3 <- rearray(simgrowth, param='log.r', probs=seq(0, 1, 0.1))
 #' str(a3)
 rearray <- function(x, param, fields, regex=FALSE, ...) {
-  if(missing(param)) param <- '.*\\[\\d+(,\\d+)+\\]'
+  if(missing(param)) {
+    param <- '.*\\[\\d+(,\\d+)+\\]'
+    regex <- TRUE
+  }
   results <- jagsresults(x, param, regex=regex, ...)
   if(!length(results))
     stop(sprintf('No arrays found in object %s', deparse(substitute(x))))
