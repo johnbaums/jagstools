@@ -22,6 +22,9 @@
 #'   that do not match elements of \code{params} will be returned.
 #' @param probs A numeric vector of probabilities within range [0, 1],
 #'   representing the sample quantiles to be calculated and returned.
+#' @param signif If supplied, all columns other than \code{n.eff} will have 
+#'   their values rounded such that the most extreme value has the specified
+#'   number of significant digits.
 #' @param ... Additional arguments accepted by \code{\link{grep}}, e.g. 
 #'   \code{perl=TRUE}, to allow look-around pattern matching.
 #' @return A matrix with one row for each parameter that matches \code{param}, 
@@ -111,7 +114,7 @@
 #' jagsresults(simgrowth_mcmclist, c('lambda[3,1]', 'sd.b'))
 #' jagsresults(simgrowth_mcmclist, c('lambda\\[3,1\\]|sd\\.'), regex=TRUE)
 jagsresults <- function(x, params, regex=FALSE, invert=FALSE, 
-                        probs=c(0.025, 0.25, 0.5, 0.75, 0.975), ...) {
+                        probs=c(0.025, 0.25, 0.5, 0.75, 0.975), signif, ...) {
   if(!regex) {
     params <- paste0(gsub('(?=\\.|\\[|\\])', '\\1\\\\', params, perl=TRUE),
                      '(\\[.*\\])?', collapse='|')
@@ -126,17 +129,22 @@ jagsresults <- function(x, params, regex=FALSE, invert=FALSE,
     if(length(i) == 0) stop("No parameters match 'params'", call.=FALSE)
     samp <- x$BUGSoutput$sims.array[, , i, drop=FALSE] 
     rhat_neff <- x$BUGSoutput$summary[i, c('Rhat', 'n.eff'), drop=FALSE]
-    return(cbind(t(apply(
+    out <- cbind(t(apply(
       samp, 3, function(x) 
-        c(mean=mean(x), sd=sd(x), quantile(x, probs=probs)))), rhat_neff))
+        c(mean=mean(x), sd=sd(x), quantile(x, probs=probs)))), rhat_neff)
   } else if(any(is(x)=='mcmc.list')) {
     nm <- colnames(x[[1]])
     i <- grep(params, nm, invert=invert, ...)
     if(length(i) == 0) stop("No parameters match 'params'", call.=FALSE)
-    t(apply(do.call(rbind, x), 2, function(z) {
+    out <- t(apply(do.call(rbind, x), 2, function(z) {
       c(mean=mean(z), sd=sd(z), quantile(z, probs))
     }))[i, , drop=FALSE]
   } else {
     stop("x must be an 'mcmc.list' or 'rjags'  object.")
   }
+  if(!missing(signif)) {
+    out[, colnames(out) != 'n.eff'] <- 
+      signif(out[, colnames(out) != 'n.eff'], signif)  
+    out
+  } else out
 }

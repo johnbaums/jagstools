@@ -5,7 +5,7 @@
 \title{Print results for specified rjags or mcmc.list parameters}
 \usage{
 jagsresults(x, params, regex = FALSE, invert = FALSE, probs = c(0.025,
-  0.25, 0.5, 0.75, 0.975), ...)
+  0.25, 0.5, 0.75, 0.975), signif, ...)
 }
 \arguments{
 \item{x}{The \code{rjags}, \code{rjags.parallel}, or \code{mcmc.list} object
@@ -31,6 +31,10 @@ that do not match elements of \code{params} will be returned.}
 
 \item{probs}{A numeric vector of probabilities within range [0, 1],
 representing the sample quantiles to be calculated and returned.}
+
+\item{signif}{If supplied, all columns other than \code{n.eff} will have 
+their values rounded such that the most extreme value has the specified
+number of significant digits.}
 
 \item{...}{Additional arguments accepted by \code{\link{grep}}, e.g. 
 \code{perl=TRUE}, to allow look-around pattern matching.}
