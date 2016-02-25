@@ -15,7 +15,7 @@ A list with two elements: \code{pD}, and \code{DIC}. If these were
 }
 \description{
 A convenience function for extracting the effective number of parameters (pD)
-and the Deviance Information Criterion (DIC) from an rjags object.
+and the Deviance Information Criterion (DIC) from an \code{rjags} object.
 }
 \examples{
 ## Data

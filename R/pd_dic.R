@@ -1,7 +1,7 @@
 #' Extract pD and DIC
 #' 
 #' A convenience function for extracting the effective number of parameters (pD)
-#' and the Deviance Information Criterion (DIC) from an rjags object.
+#' and the Deviance Information Criterion (DIC) from an \code{rjags} object.
 #' 
 #' @param x An \code{rjags} or \code{rjags.parallel} object.
 #' @return A list with two elements: \code{pD}, and \code{DIC}. If these were

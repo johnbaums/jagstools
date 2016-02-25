@@ -21,4 +21,4 @@ rhats <- function(x, asc=TRUE) {
     else {
       x$BUGSoutput$summary[, 'Rhat', drop=FALSE]
     }
-  }
+}
